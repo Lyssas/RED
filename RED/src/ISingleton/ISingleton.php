@@ -1,9 +1,0 @@
-<?php
-/**
-* Interface for classes implementing the singleton pattern.
-*
-* @package RedCore
-*/
-interface ISingleton {
-   public static function Instance();
-}
