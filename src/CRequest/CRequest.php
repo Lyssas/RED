@@ -51,6 +51,8 @@ class CRequest {
 	    if(empty($request) && isset($_GET['q'])) {
 	      $request = trim($_GET['q']);
 	    }
+
+	    
 	    $splits = explode('/', $request);
 	    
 	    // Set controller, method and arguments

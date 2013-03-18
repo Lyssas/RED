@@ -10,25 +10,27 @@
 error_reporting(-1);
 ini_set('display_errors', 1);
 
-/*
-* Define session name
-*/
-$ly->config['session_name'] = preg_replace('/[:\.\/-_]/', '', $_SERVER["SERVER_NAME"]);
+
+/**
+ * Define session name
+ */
+$this->config['session_name'] = preg_replace('/[:\.\/-_]/', '', $_SERVER["SERVER_NAME"]);
+$this->config['session_key']  = 'RED';
 
 /*
 * Define server timezone
 */
-$ly->config['timezone'] = 'Europe/Stockholm';
+$this->config['timezone'] = 'Europe/Stockholm';
 
 /*
 * Define internal character encoding
 */
-$ly->config['character_encoding'] = 'UTF-8';
+$this->config['character_encoding'] = 'UTF-8';
 
 /*
 * Define language
 */
-$ly->config['language'] = 'en';
+$this->config['language'] = 'en';
 
 /**
 * Define the controllers, their classname and enable/disable them.
@@ -39,15 +41,16 @@ $ly->config['language'] = 'en';
 * $ly->FrontControllerRoute();
 * which is called in the frontcontroller phase from index.php.
 */
-$ly->config['controllers'] = array(
+$this->config['controllers'] = array(
   'index'     => array('enabled' => true,'class' => 'CCIndex'),
   'developer' => array('enabled' => true,'class' => 'CCDeveloper'),
+  'guestbook' => array('enabled' => true,'class' => 'CCGuestbook'),
 );
 
 /**
 * Settings for the theme.
 */
-$ly->config['theme'] = array(
+$this->config['theme'] = array(
   // The name of the theme in the theme directory
   'name'    => 'core', 
 );
@@ -55,7 +58,7 @@ $ly->config['theme'] = array(
 /**
 * Set a base_url to use another than the default calculated
 */
-$ly->config['base_url'] = null;
+$this->config['base_url'] = null;
 
 /**
 * What type of urls should be used?
@@ -64,4 +67,23 @@ $ly->config['base_url'] = null;
 * clean        = 1      => controller/method/arg1/arg2/arg3
 * querystring  = 2      => index.php?q=controller/method/arg1/arg2/arg3
 */
-$ly->config['url_type'] = 1;
+$this->config['url_type'] = 1;
+
+/**
+* Which debug values should be displayed?
+* 1 = display
+* 0 = hide
+*/
+$this->config['debug']['RED'] = 1;
+$this->config['debug']['db-num-queries'] = 1;
+$this->config['debug']['db-queries'] = 1;
+$this->config['debug']['session'] = 1;
+$this->config['debug']['timer'] = 1;
+
+/**
+* Set database(s).
+*/
+$this->config['database'][0]['dsn'] = 'sqlite:' . RED_SITE_PATH . '/data/.ht.sqlite';
+
+//Sessions
+$this->config['session_key']  = 'RED';

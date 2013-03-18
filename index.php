@@ -1,6 +1,4 @@
-<!-- Grundstruktur -->
 <?php
-
 //
 // PHASE: BOOTSTRAP
 //

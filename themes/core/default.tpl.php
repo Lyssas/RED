@@ -9,12 +9,24 @@
   <div id="header">
     <?php echo $header?>
   </div>
-  <div id="main" role="main">
-    <?php echo $main?>
-    <?php echo get_debug()?>
+  
+  <div id='wrap-main'>
+    <div id='main' role='main'>
+      
+      <?php echo get_messages_from_session()?>
+      <?php echo @$main?>
+      <?php echo render_views()?>
+      <?php echo get_debug()?>
+    </div>
   </div>
+  
+  
+ 
   <div id="footer">
     <?php echo $footer?>
   </div>
 </body>
 </html>
+
+
+  

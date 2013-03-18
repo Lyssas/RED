@@ -33,6 +33,7 @@ div.debug
 div.temp
 {
 	padding: 25px;
+	overflow: hidden;
 }
 
 div.content
@@ -106,3 +107,26 @@ header#above{
 	margin-bottom:4px;
 	color:#000;
 }
+
+/**
+ * User feedback message wrappers.
+ */
+.error, .alert, .warning, .notice, .success, .info { 
+padding: 0.8em; margin-bottom: 1em; border: 2px solid #ddd; }
+
+.error, .alert { margin:0 auto;
+	width:1050px; background: #fbe3e4; color: #8a1f11; border-color: #fbc2c4; }
+.notice, .warning {margin:0 auto;
+	width:1050px; background: #fff6bf; color: #514721; border-color: #ffd324; }
+.success       {margin:0 auto;
+	width:1050px; background: #e6efc2; color: #264409; border-color: #c6d880; }
+.info          {margin:0 auto;
+	width:1050px; background: #d5edf8; color: #205791; border-color: #92cae4; }
+.error a, .alert a {margin:0 auto;
+	width:1050px; color: #8a1f11; }
+.notice a, .warning a {margin:0 auto;
+	width:1050px; color: #514721; }
+.success a         {margin:0 auto;
+	width:1050px; color: #264409; }
+.info a            {margin:0 auto;
+	width:1050px; color: #205791; }

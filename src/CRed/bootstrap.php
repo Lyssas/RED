@@ -6,6 +6,23 @@
 */
 
 /**
+* Helper, wrap html_entites with correct character encoding
+*/
+function htmlent($str, $flags = ENT_COMPAT) 
+{
+	return htmlentities($str, $flags, CRed::Instance()->config['character_encoding']);
+}
+
+/**
+* Set a default exception handler and enable logging in it.
+*/
+function exception_handler($exception) 
+{
+	echo "RED: Uncaught exception: <p>" . $exception->getMessage() . "</p><pre>" . $exception->getTraceAsString(), "</pre>";
+}
+set_exception_handler('exception_handler');
+
+/**
 * Enable auto-load of class declarations.
 */
 function autoload($aClassName) {

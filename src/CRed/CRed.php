@@ -1,6 +1,6 @@
 <?php
 /**
-* Main class for Lydia, holds everything.
+* Main class for Red, holds everything.
 *
 * @package RedCore
 */
@@ -16,8 +16,23 @@ class CRed implements ISingleton
    protected function __construct() 
    {
       // include the site specific config.php and create a ref to $ly to be used by config.php
-      $ly = &$this;
+      $RED = &$this;
       require(RED_SITE_PATH.'/config.php');
+      
+     // Start a named session
+      session_name($this->config['session_name']);
+      session_start();
+      $this->session = new CSession($this->config['session_key']);
+      $this->session->PopulateFromSession();
+      
+      // Create a database object.
+      if(isset($this->config['database'][0]['dsn'])) 
+      {
+      	      $this->db = new CMDatabase($this->config['database'][0]['dsn']);
+      }
+      
+      // Create a container for all views and theme data
+      $this->views = new CViewContainer();
    }
    
   /**
@@ -44,6 +59,7 @@ class CRed implements ISingleton
 	    $controller = $this->request->controller;
 	    $method     = $this->request->method;
 	    $arguments  = $this->request->arguments;
+	    $formattedMethod = str_replace(array('_', '-'), '', $method);
 	    
 	    // Is the controller enabled in config.php?
 	    $controllerExists    = isset($this->config['controllers'][$controller]);
@@ -65,10 +81,10 @@ class CRed implements ISingleton
 		      $rc = new ReflectionClass($className);
 		      if($rc->implementsInterface('IController')) 
 		      {
-			      if($rc->hasMethod($method)) 
+			      if($rc->hasMethod($formattedMethod)) 
 			      {
 				      $controllerObj = $rc->newInstance();
-				      $methodObj = $rc->getMethod($method);
+				      $methodObj = $rc->getMethod($formattedMethod);
 				      $methodObj->invokeArgs($controllerObj, $arguments);
 			      } 
 			      else 
@@ -83,7 +99,7 @@ class CRed implements ISingleton
 	    } 
 	    else
 	    { 
-		    die('404. Page is not found.');
+		    die('404. Page is not found. HAHA');
 	    }
 	    
   }
@@ -93,6 +109,7 @@ class CRed implements ISingleton
   */
   public function ThemeEngineRender() 
   {
+  	    $this->session->StoreInSession();
 	    // Get the paths and settings for the theme
 	    $themeName    = $this->config['theme']['name'];
 	    $themePath    = RED_INSTALL_PATH . "/themes/{$themeName}";
@@ -112,9 +129,10 @@ class CRed implements ISingleton
 	    }
 	    
 	    // Extract $RED->data to own variables and handover to the template file
-	    extract($this->data);      
-	    include("{$themePath}/default.tpl.php");	  
-  }
+	     extract($this->data);      
+	     extract($this->views->GetData());      
+	     include("{$themePath}/default.tpl.php");	  
+  }	
 }
 
    
