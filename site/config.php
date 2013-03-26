@@ -45,6 +45,8 @@ $this->config['controllers'] = array(
   'index'     => array('enabled' => true,'class' => 'CCIndex'),
   'developer' => array('enabled' => true,'class' => 'CCDeveloper'),
   'guestbook' => array('enabled' => true,'class' => 'CCGuestbook'),
+  'user' => array('enabled' => true,'class' => 'CCUser'),
+  'acp' => array('enabled' => true,'class' => 'CCAdminControlPanel'),
 );
 
 /**
@@ -87,3 +89,14 @@ $this->config['database'][0]['dsn'] = 'sqlite:' . RED_SITE_PATH . '/data/.ht.sql
 
 //Sessions
 $this->config['session_key']  = 'RED';
+
+
+/**
+* How to hash password of new users, choose from: plain, md5salt, md5, sha1salt, sha1.
+*/
+$this->config['hashing_algorithm'] = 'sha1salt';
+
+/**
+* Allow or disallow creation of new user accounts.
+*/
+$this->config['create_new_users'] = true;

@@ -42,6 +42,12 @@ div.content
 	border: 1px solid #000000;
 }
 
+div#login-menu
+{
+	float: right;
+	margin-right: 10px;	
+}
+
 #header,
 #main,
 {
@@ -108,6 +114,25 @@ header#above{
 	color:#000;
 }
 
+a:link {color:#000000;}      /* unvisited link */
+a:visited {color:#000000;}  /* visited link */
+a:hover {color:#FF00FF;}  /* mouse over link */
+a:active {color:#0000FF;}  /* selected link */ 
+
+a.login
+{
+	font-family: "verdana", sans-serif;
+	font-size: 12px;
+   	text-decoration:none;
+}
+
+img.gravatar
+{
+	
+	position: relative;
+	top: 5px;	
+}
+
 /**
  * User feedback message wrappers.
  */
@@ -130,3 +155,8 @@ padding: 0.8em; margin-bottom: 1em; border: 2px solid #ddd; }
 	width:1050px; color: #264409; }
 .info a            {margin:0 auto;
 	width:1050px; color: #205791; }
+	
+.validation-failed{margin:0 auto;
+	width:1050px;border:2px solid red;}
+.validation-message{margin:0 auto;
+	width:1050px;color:red;font-size:smaller;}

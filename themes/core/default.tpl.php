@@ -6,7 +6,11 @@
   <link rel="stylesheet" href="<?php echo $stylesheet?>">
 </head>
 <body>
+<div id='login-menu'>	
+        	<?php echo login_menu()?>
+      </div>
   <div id="header">
+  	
     <?php echo $header?>
   </div>
   

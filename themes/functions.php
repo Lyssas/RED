@@ -26,11 +26,11 @@ function get_debug()
 		  $html .= "<div class = 'debug'><h3>DB Queries</h3><p>Database made the following queries.</p><pre>" . implode('<br/><br/>', $RED->db->GetQueries()) . "</pre></div>";  	 
 	  }
 	  if(isset($RED->config['debug']['session']) && $RED->config['debug']['session']) {
-	  	  $html .= "<div class = 'debug'><hr><h3>SESSION</h3><p>The content of CLydia->session:</p><pre>" . htmlent(print_r($RED->session, true)) . "</pre>";
+	  	  $html .= "<div class = 'debug'><hr><h3>SESSION</h3><p>The content of CRed->session:</p><pre>" . htmlent(print_r($RED->session, true)) . "</pre>";
 	  	  $html .= "<p>The content of \$_SESSION:</p><pre>" . htmlent(print_r($_SESSION, true)) . "</pre></div>";
 	  }  
 	  if(isset($RED->config['debug']['timer']) && $RED->config['debug']['timer']) {
-	   	  $html .= "<div class = 'debug'><hr><h3>Timer</h3><p>Page was loaded in " . round(microtime(true) - $RED->timer['first'], 5)*1000 . " msecs.</p></div>";
+	   	  @$html .= "<div class = 'debug'><hr><h3>Timer</h3><p>Page was loaded in " . round(microtime(true) - $RED->timer['first'], 5)*1000 . " msecs.</p></div>";
 	  }    
 	  return $html;	
 }
@@ -39,6 +39,18 @@ function get_debug()
 */
 function base_url($url) {
 	return CRed::Instance()->request->base_url . trim($url, '/');
+}
+
+  /**
+ * Create a url to an internal resource.
+ *
+ * @param string the whole url or the controller. Leave empty for current controller.
+ * @param string the method when specifying controller as first argument, else leave empty.
+ * @param string the extra arguments to the method, leave empty if not using method.
+ */
+function create_url($urlOrController=null, $method=null, $arguments=null) 
+{
+  return CRed::Instance()->request->CreateUrl($urlOrController, $method, $arguments);
 }
 
 /**
@@ -76,5 +88,29 @@ function get_messages_from_session()
 	}
 	
 	return $html;
+}
+
+/**
+* Login menu. Creates a menu which reflects if user is logged in or not.
+*/
+function login_menu() {
+  $RED = CRed::Instance();
+  if($RED->user->IsAuthenticated()) {
+   $items = "<a class = 'login' href='" . create_url('user/profile') . "'><img class='gravatar' src='" . get_gravatar(20) . "' alt=''> " . $RED->user['acronym'] . "</img></a> ";
+    if($RED->user->IsAdministrator()) {
+      $items .= "<a class = 'login' href='" . $RED->request->CreateUrl('acp') . "'>acp</a> ";
+    }
+    $items .= "<a class = 'login' href='" . $RED->request->CreateUrl('user/logout') . "'>logout</a> ";
+  } else {
+    $items = "<a class = 'login' href='" . $RED->request->CreateUrl('user/login') . "'>login</a> ";
+  }
+  return "<nav>$items</nav>";
+}
+
+/**
+* Get a gravatar based on the user's email.
+*/
+function get_gravatar($size=null) {
+  return 'http://www.gravatar.com/avatar/' . md5(strtolower(trim(CRed::Instance()->user['email']))) . '.jpg?' . ($size ? "s=$size" : null);
 }
 
