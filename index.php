@@ -5,7 +5,7 @@
 define('RED_INSTALL_PATH', dirname(__FILE__));
 define('RED_SITE_PATH', RED_INSTALL_PATH . '/site');
 
-require(RED_INSTALL_PATH.'/src/CRed/bootstrap.php');
+require(RED_INSTALL_PATH.'/src/bootstrap.php');
 
 $RED = CRed::Instance();
 
