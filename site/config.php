@@ -50,6 +50,7 @@ $this->config['controllers'] = array(
   'content' => array('enabled' => true,'class' => 'CCContent'),
   'blog' => array('enabled' => true,'class' => 'CCBlog'),
   'page' => array('enabled' => true,'class' => 'CCPage'),
+  'theme' => array('enabled' => true,'class' => 'CCTheme'),
 );
 
 /**
@@ -57,8 +58,28 @@ $this->config['controllers'] = array(
 */
 $this->config['theme'] = array(
   // The name of the theme in the theme directory
-  'name'    => 'core', 
+  //'name'    => 'core', 
+  'name'    => 'grid',
+  'stylesheet' => 'style.php',
+  'template_file'   => 'index.tpl.php',
+  // A list of valid theme regions
+  'regions' => array('flash','featured-first','featured-middle','featured-last',
+    'primary','sidebar','triptych-first','triptych-middle','triptych-last',
+    'footer-column-one','footer-column-two','footer-column-three','footer-column-four',
+    'footer',
+  ),
+  // Add static entries for use in the template file. 
+  'data' => array(
+    'header' => 'RED',
+    'slogan' => 'A PHP-based MVC-inspired CMF',
+    'favicon' => 'favicon.png',
+    'logo' => 'logo_80x80.png',
+    'logo_width'  => 80,
+    'logo_height' => 80,
+    'footer' => '<footer id = "bottom"><p>&copy; RED by Henrik Lundqvist. Inspired by and created with tutorial for &copy; Lydia by Mikael Roos (mos@dbwebb.se)</p></footer>',
+  ),
 );
+
 
 /**
 * Set a base_url to use another than the default calculated
@@ -103,3 +124,5 @@ $this->config['hashing_algorithm'] = 'sha1salt';
 * Allow or disallow creation of new user accounts.
 */
 $this->config['create_new_users'] = true;
+
+

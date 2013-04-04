@@ -37,7 +37,7 @@ function get_debug()
 /**
 * Create a url by prepending the base_url.
 */
-function base_url($url) {
+function base_url($url = 'null') {
 	return CRed::Instance()->request->base_url . trim($url, '/');
 }
 
@@ -60,16 +60,15 @@ function current_url() {
 	return CRed::Instance()->request->current_url;
 }
 
-/**
-* Render all views.
-*/
-function render_views() {
-	return CRed::Instance()->views->Render();
-}
 
 /**
-* Get messages stored in flash-session.
+* Render all views.
+*
+* @param $region string the region to draw the content in.
 */
+function render_views($region='default') {
+  return CRed::Instance()->views->Render($region);
+}
 
 function get_messages_from_session() 
 {
@@ -133,5 +132,22 @@ function esc($str) {
  */
 function filter_data($data, $filter) {
   return CMContent::Filter($data, $filter);
+}
+
+/**
+ * Prepend the theme_url, which is the url to the current theme directory.
+ */
+function theme_url($url) {
+  $RED = CRed::Instance();
+  return "{$RED->request->base_url}themes/{$RED->config['theme']['name']}/{$url}";
+}
+
+/**
+* Check if region has views. Accepts variable amount of arguments as regions.
+*
+* @param $region string the region to draw the content in.
+*/
+function region_has_content($region='default' /*...*/) {
+  return CRed::Instance()->views->RegionHasView(func_get_args());
 }
 
