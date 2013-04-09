@@ -19,9 +19,20 @@ class CCTheme extends CObject implements IController {
    * Display what can be done with this controller.
    */
   public function Index() {
+    // Get a list of all kontroller methods
+    $rc = new ReflectionClass(__CLASS__);
+    $methods = $rc->getMethods(ReflectionMethod::IS_PUBLIC);
+    $items = array();
+    foreach($methods as $method) {
+      if($method->name != '__construct' && $method->name != '__destruct' && $method->name != 'Index') {
+        $items[] = $this->request->controller . '/' . mb_strtolower($method->name);
+      }
+   }
+
     $this->views->SetTitle('Theme');
                 $this->views->AddInclude(__DIR__ . '/index.tpl.php', array(
                   'theme_name' => $this->config['theme']['name'],
+                  'methods' => $items,
                 ));
   }
   

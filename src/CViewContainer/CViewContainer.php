@@ -53,7 +53,7 @@ class CViewContainer {
    * @param $region string the theme region, uses string 'default' as default region.
    * @returns $this.
    */
-  public function AddInclude($file, $variables=array(), $region='default') {
+  public function AddInclude($file, $variables=array(), $region='primary') {
     $this->views[$region][] = array('type' => 'include', 'file' => $file, 'variables' => $variables);
     return $this;
   }
@@ -73,7 +73,7 @@ class CViewContainer {
 
 
 
-     /**
+   /**
    * Render all views according to their type.
    * 
    * @param $region string the region to render views for.
@@ -82,8 +82,8 @@ class CViewContainer {
     if(!isset($this->views[$region])) return;
     foreach($this->views[$region] as $view) {
       switch($view['type']) {
-        case 'include': extract($view['variables']); include($view['file']); break;
-        case 'string':  extract($view['variables']); echo $view['string']; break;
+        case 'include': if(isset($view['variables'])) extract($view['variables']); include($view['file']); break;
+        case 'string':  if(isset($view['variables'])) extract($view['variables']); echo $view['string']; break;
       }
     }
   }

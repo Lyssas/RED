@@ -43,17 +43,15 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
   {
     $order_order  = isset($args['order-order']) ? $args['order-order'] : 'DESC';
     $order_by     = isset($args['order-by'])    ? $args['order-by'] : 'id'; 
-    //die('404. ' . $args['order-order'] . ' bla');
+   
     $queries = array(
       'drop table content'      => "DROP TABLE IF EXISTS Content;",
+      'delete content'      	=> "DELETE FROM Content WHERE id=?;",
       'create table content'    => "CREATE TABLE IF NOT EXISTS Content (id INTEGER PRIMARY KEY, key TEXT KEY, type TEXT, title TEXT, data TEXT, filter TEXT, idUser TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL, deleted DATETIME default NULL, FOREIGN KEY(idUser) REFERENCES User(id));",
       'insert content'          => 'INSERT INTO Content (key,type,title,data, filter, idUser) VALUES (?,?,?,?,?,?);',
       'update content'          => "UPDATE Content SET key=?, type=?, title=?, data=?, filter=?, updated=datetime('now') WHERE id=?;",
-    //  'select * by id'          => 'SELECT c.*, u.acronym as owner FROM Content AS c INNER JOIN User as u ON c.idUser=u.id WHERE c.id=?;',
       'select * single'         => "SELECT * FROM Content WHERE id=? ORDER BY $order_by $order_order",
       'select * type'         	=> "SELECT * FROM Content WHERE type=? ORDER BY $order_by $order_order",
-    //  'select * by key'         => 'SELECT c.*, u.acronym as owner FROM Content AS c INNER JOIN User as u ON c.idUser=u.id WHERE c.key=?;',
-    //  'select *'                => 'SELECT c.*, u.acronym as owner FROM Content AS c INNER JOIN User as u ON c.idUser=u.id;',
       'select all'              => 'SELECT * FROM Content',
       
      );
@@ -63,10 +61,38 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
     return $queries[$key];
   }
 
-
-  /**
-   * Init the database and create appropriate tables.
+  
+    /**
+   * Implementing interface IModule. Manage install/update/deinstall and equal actions.
    */
+  public function Manage($action=null) {
+    switch($action) {
+      case 'install': 
+        try {
+            $this->db->ExecuteQuery(self::SQL('drop table content'));
+      $this->db->ExecuteQuery(self::SQL('create table content'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world', 'page', 'About me', 'This is a demo post where information about the user can be presented.', 'plain', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world', 'post', 'Hello World', 'This is a demo post.', 'plain', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world2', 'post', 'Hello World Again', 'This is a another demo post.', 'plain', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world3', 'post', 'Bla Bla Hello World Yet Again', 'This is yet another demo post.', 'plain', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world BB-Code', 'post', 'Hello World BB-code', '[b]This[/b] is [i]BB-Code[/i].', 'bbcode', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world HTMLPurify', 'post', 'Hello World HTMLPurify', 'This is a demo page with some HTML code intended to run through <a href="http://htmlpurifier.org/">HTMLPurify</a>. Edit the source and insert HTML code and see if it works. <b>Text in bold</b> and <i>text in italic</i> and <a href="http://dbwebb.se">a link to dbwebb.se</a>. JavaScript, like this: <javascript>alert("hej");</javascript> should however be removed.', 'htmlpurify', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('home', 'page', 'Home page', 'This is a demo page, this could be your personal home-page.', 'plain', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('about', 'page', 'About page', 'This is a demo page, this could be your personal home-page.', 'plain', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('download', 'page', 'Download page', 'This is a demo page, this could be your personal home-page.', 'plain', 'Automatically generated'));
+          return array('success', 'Successfully created the database tables and created a default "Hello World" blog post, owned by you.');
+        } catch(Exception$e) {
+          die("$e<br/>Failed to open database: " . $this->config['database'][0]['dsn']);
+        }
+      break;
+      
+      default:
+        throw new Exception('Unsupported action for this module.');
+      break;
+    }
+  }
+
+ /*
   public function Init() {
     try {
       $this->db->ExecuteQuery(self::SQL('drop table content'));
@@ -84,7 +110,7 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
       die("$e<br/>Failed to open database: " . $this->config['database'][0]['dsn']);
     }
   }
-  
+  */
   
 
   /**
@@ -130,13 +156,23 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
     $rowcount = $this->db->RowCount();
    
     if($rowcount) {
-    	    
-      $this->session->AddMessage('success', "Successfully {$msg} content '{$this['key']}'.");
+  
+      $this->session->AddMessage('success', "Successfully {$msg}d content '{$this['key']}'.");
+      
     } else {
     	    
-      $this->session->AddMessage('error', "HELLO!O Failed to {$msg} content '{$this['key']}'.");
+      $this->session->AddMessage('error', "HELLO!O Failed to {$msg}d content '{$this['key']}'.");
     }
     return $rowcount === 1;
+    
+  }
+  
+  public function Delete($postId) 
+  {
+  	  
+  	  $this->db->ExecuteQuery(self::SQL('delete content'), array($postId));
+  	  $this->session->AddMessage('success', "Successfully deleted content with id '{$postId}'.");
+  	  
     
   }
     

@@ -20,7 +20,9 @@
 <div style='background-color:#f6f6f6;border:1px solid #ccc;margin-bottom:1em;padding:1em;'>
   	
 	<p><?php echo htmlent($val['entry'])?></p>
+	<p>By: <?php echo $val['user']?></p>
 	<p>At: <?php echo $val['created']?></p>
+	
  
 </div>
 <?php endforeach;?>

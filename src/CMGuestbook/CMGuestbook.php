@@ -4,7 +4,8 @@
 * 
 * @package RedCore
 */
-class CMGuestbook extends CObject implements IHasSQL {
+class CMGuestbook extends CObject implements IModule, IHasSQL 
+{
 
 
   /**
@@ -22,10 +23,11 @@ class CMGuestbook extends CObject implements IHasSQL {
    */
   public static function SQL($key=null) {
     $queries = array(
-      'create table guestbook'  => "CREATE TABLE IF NOT EXISTS Guestbook (id INTEGER PRIMARY KEY, entry TEXT, created DATETIME default (datetime('now')));",
-      'insert into guestbook'   => 'INSERT INTO Guestbook (entry) VALUES (?);',
-      'select * from guestbook' => 'SELECT * FROM Guestbook ORDER BY id DESC;',
-      'delete from guestbook'   => 'DELETE FROM Guestbook;',
+      'drop table guestbook'      	=> "DROP TABLE IF EXISTS Guestbook;",
+      'create table guestbook'  	=> "CREATE TABLE IF NOT EXISTS Guestbook (id INTEGER PRIMARY KEY, entry TEXT, created DATETIME default (datetime('now')), user TEXT);",
+      'insert into guestbook'   	=> 'INSERT INTO Guestbook (entry, user) VALUES (?,?);',
+      'select * from guestbook' 	=> 'SELECT * FROM Guestbook ORDER BY id DESC;',
+      'delete from guestbook'   	=> 'DELETE FROM Guestbook;',
      );
     if(!isset($queries[$key])) {
       throw new Exception("No such SQL query, key '$key' was not found.");
@@ -33,10 +35,31 @@ class CMGuestbook extends CObject implements IHasSQL {
     return $queries[$key];
   }
 
-
-  /**
-   * Init the guestbook and create appropriate tables.
+    /**
+   * Implementing interface IModule. Manage install/update/deinstall and equal actions.
    */
+  public function Manage($action=null) {
+    switch($action) {
+      case 'install': 
+        try 
+        {
+        	$this->db->ExecuteQuery(self::SQL('drop table guestbook'));
+          $this->db->ExecuteQuery(self::SQL('create table guestbook'));
+          return array('success', 'Successfully created the database tables (or left them untouched if they already existed).');
+        } 
+        catch(Exception$e) 
+        {
+          die("$e<br/>Failed to open database: " . $this->config['database'][0]['dsn']);
+        }
+      break;
+      
+      default:
+        throw new Exception('Unsupported action for this module.');
+      break;
+    }
+  }
+  
+  /*
   public function Init() {
     try {
       $this->db->ExecuteQuery(self::SQL('create table guestbook'));
@@ -45,13 +68,21 @@ class CMGuestbook extends CObject implements IHasSQL {
       die("$e<br/>Failed to open database: " . $this->config['database'][0]['dsn']);
     }
   }
-  
+  */
 
   /**
    * Add a new entry to the guestbook and save to database.
    */
   public function Add($entry) {
-    $this->db->ExecuteQuery(self::SQL('insert into guestbook'), array($entry));
+  	  if($this->user['acronym'] != null)
+    	  {
+    	    	$this->db->ExecuteQuery(self::SQL('insert into guestbook'), array($entry, $this->user['acronym']));
+    	  }
+    	  else
+    	  {
+    	  	$this->db->ExecuteQuery(self::SQL('insert into guestbook'), array($entry, 'Anonymous'));  
+    	  }
+   // $this->db->ExecuteQuery(self::SQL('insert into guestbook'), array($entry));
     $this->session->AddMessage('success', 'Successfully inserted new message.');
     if($this->db->rowCount() != 1) {
       die('Failed to insert new guestbook item into database.');

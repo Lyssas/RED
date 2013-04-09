@@ -4,7 +4,8 @@
   <meta charset='utf-8'/>
   <title><?php echo $title?></title>
   <link rel='shortcut icon' href='<?php echo theme_url($favicon)?>'/>
-  <link rel='stylesheet' href='<?php echo $stylesheet?>'/>
+  <link rel='stylesheet' href='<?php echo theme_url($stylesheet)?>'/>
+
   <?php if(isset($inline_style)): ?><style><?php echo $inline_style?></style><?php endif; ?>
 </head>
 <body>
@@ -14,13 +15,21 @@
     <div id='header'>
       <div id='login-menu'><?php echo login_menu()?></div>
       <div id='banner'>
+      
+     
+      
         <a href='<?php echo base_url()?>'><img id='site-logo' src='<?php echo theme_url($logo)?>' alt='logo' width='<?php echo $logo_width?>' height='<?php echo $logo_height?>' /></a>
         <span id='site-title'><a href='<?php echo base_url()?>'><?php echo $header?></a></span>
         <span id='site-slogan'><?php echo $slogan?></span>
       </div>
+      <?php if(region_has_content('navbar')): ?>
+      <div id='navbar'><?php echo render_views('navbar')?></div>
+      <?php endif; ?>
     </div>
   </div>
 </div>
+
+ 
 
 <?php if(region_has_content('flash')): ?>
 <div id='outer-wrap-flash'>
@@ -43,8 +52,13 @@
 <?php if(region_has_content('primary', 'sidebar')): ?>
 <div id='outer-wrap-main'>
   <div id='inner-wrap-main'>
-    <div id='primary'><?php echo render_views('primary')?></div>
-    <div id='sidebar'><?php echo render_views('sidebar')?></div>
+    <div id='primary'>
+    	<?php echo get_messages_from_session()?>
+    	<?php echo render_views('primary')?>
+    </div>
+    <?php if(region_has_content('sidebar')): ?>
+    	<div id='sidebar'><?php echo render_views('sidebar')?></div>
+    <?php endif; ?>
   </div>
 </div>
 <?php endif; ?>

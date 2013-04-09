@@ -7,6 +7,7 @@
 </head>
 <body>
 <div id='login-menu'>	
+<p> HELLO! </p>
         	<?php echo login_menu()?>
       </div>
   <div id="header">
