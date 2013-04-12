@@ -155,4 +155,54 @@ Save the changes and upload to your server. The changes should now be working.
 
 Changing the navigation menu
 ----------------------------
+To change the navigation menu you have to go through two steps.
 
+1.
+--
+
+To change the page footer simply open the file
+
+    RED/site/config.php
+    
+In the file you will find the following array:
+
+    $this->config['menus']
+    
+This array stores the navigation menus of the framework. The code below shows an example of how a navigation menu is built up, this menu is called "my-navbar":
+
+    'my-navbar' => array(
+    'home'      => array('label'=>'About Me', 'url'=>'my/aboutme'),
+    'blog'      => array('label'=>'My Blog', 'url'=>'my/blog'),
+    'guestbook' => array('label'=>'Guestbook', 'url'=>'my/guestbook'),
+  ),
+  
+To create your own menu simply follow the syntax above and write your own menu, the syntax is further described here:
+
+    'YourMenuName' => array(
+    'internalButtonName'      => array('label'=>'nameVisibleOnSite', 'url'=>'controller/method'),
+    
+Once you are satisfied with your menu, proceed to step two.
+
+2.
+--
+
+You have now created your own menu, now you have to tell the framework this is the menu you want to use.
+
+Stay in the file:
+
+    RED/site/config.php
+    
+In the file you will find the following array:
+
+    $this->config['theme']
+    
+This array controlls the configuration of the site's theme. To change which navigation menu is used you have to look up the following line:
+
+    'menu_to_region' => array('my-navbar'=>'navbar'),
+    
+Change the line to your own menu, i.e:
+
+    'menu_to_region' => array('YourMenuName'=>'navbar'),
+    
+Save the changes and upload to your server. The changes should now be working.    
+    
