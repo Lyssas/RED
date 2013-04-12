@@ -5,6 +5,4 @@ mvc-ramverk
 
 Testar
 
-[code]
-Lite kod
-[/code]
+> git clone git://github.com/Trobiz/Frost.git 
