@@ -204,5 +204,40 @@ Change the line to your own menu, i.e:
 
     'menu_to_region' => array('YourMenuName'=>'navbar'),
     
-Save the changes and upload to your server. The changes should now be working.    
+Save the changes and upload to your server. The changes should now be working. 
+
+
+Create content in RED
+=====================
+
+Red comes with some default content, it is however more than likely that you wish to create some content of your own. Currently
+RED supports two types of content, posts and pages. This section will show you how to create contents of both types.
+
+The first thing you must do is to log in as admin, the default admin user and password is root:root (it is advised that you change the password or create a new personal admin user if you intend to use RED for a live website).
+Once you have logged in head over to:
+
+    ../RED/content
+    
+In the list of Actions on this page you can select "Create content", click the link.
+
+You have now been directed to the form for creation of content, below follows a quick description of the fields:
+
+Title = The title of your content.
+
+Key = Internal key to uor content. Can not handle blank spaces, thus name accordingly: "my-content" or "my_content".
+
+Content = Here is where you put your content.
+
+Filter = Decides which filter is applied on your content: I'd recomend to use "htmlpurify" which allows you to use html.
+All the filters available are:
+
+    htmlpurify
+    bbcode
+    plain
+    
+Type = This is where you decide whether your content should be a page or a post. Simply enter either "page" or "post".
+
+When you have filled out all the fields, click the "Create content" button. You have now created your own content.
+
+
     
