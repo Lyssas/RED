@@ -66,9 +66,93 @@ You have now completed the installation of RED. The guide below will show you ho
 to your liking.
     
     
+Configure RED
+=============
+
+In this section we cover how to configure parts of the framework to your liking.
+
+Changing the logotype
+---------------------
+
+The framework comes with a standard logo. If you prefer to use another logo, simply follow these steps.
+
+The standard logo is stored in: 
+
+    RED/themes/grid/
     
+and is callled:
+
+    logo_80x80.png
+    
+If you do not care about keeping the standard logo simply replace this file with another containing your prefered logo (you can always copy the original logo and save it somewhere if you want to put it back)
+
+You can also put your own logo (with any name) in the folder:
+
+    RED/themes/grid/
+    
+Then configure the file:
+
+    RED/site/config.php
+    
+In the file you will find the following array:
+
+    $this->config['theme']
+    
+This array controlls the configuration of the site's theme. To change the logo, look up the following line:
+
+    'logo' => 'logo_80x80.png',
+    
+and change it to:
+    
+    'logo' => 'yourLogoName',
+    
+Save the changes and upload to your server. The changes should now be working.
 
 
+Changing the website title (slogan)
+-----------------------------------
+
+To change the page title (slogan) simply open the file
+
+    RED/site/config.php
+    
+In the file you will find the following array:
+
+    $this->config['theme']
+    
+This array controlls the configuration of the site's theme. To change the title (slogan) look up the following line:
+
+    'slogan' => 'A PHP-based MVC-inspired CMF',
+    
+And change it to:
+
+    'slogan' => 'Your title',
+
+Save the changes and upload to your server. The changes should now be working.
 
 
+Changing the website footer
+---------------------------
+
+To change the page footer simply open the file
+
+    RED/site/config.php
+    
+In the file you will find the following array:
+
+    $this->config['theme']
+    
+This array controlls the configuration of the site's theme. To change the title (slogan) look up the following line:
+
+    'footer' => '<footer id = "bottom"><p>&copy; RED by Henrik Lundqvist. Inspired by and created with tutorial for &copy; Lydia by Mikael Roos (mos@dbwebb.se)</p></footer>',
+    
+And change it to:
+
+    'footer' => '<footer id = "bottom"><p>Your footer</p></footer>',
+
+Save the changes and upload to your server. The changes should now be working.
+
+
+Changing the navigation menu
+----------------------------
 
