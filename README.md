@@ -22,7 +22,7 @@ The source code of RED can be reviewed directly at:
 
     https://github.com/Lyssas/RED/
     
-Instalation
+Installation
 -----------
 The installation of RED consists of 3 simple steps, simply follow them in order.
 
