@@ -69,7 +69,13 @@ to your liking.
 Configure RED
 =============
 
-In this section we cover how to configure parts of the framework to your liking.
+In this section we cover how to configure parts of the framework to your liking. If you are comfortable working with
+CSS you can open the file
+
+    RED/site/themes/mytheme/style.css
+    
+In this file you can change mostly anything on the site, for instance background colors and fonts. If you wish to further customize
+your page the guide below shows how to customize the logotype, the page title (slogan), the footer, and the navigation menu.
 
 Changing the logotype
 ---------------------
@@ -240,4 +246,83 @@ Type = This is where you decide whether your content should be a page or a post.
 When you have filled out all the fields, click the "Create content" button. You have now created your own content.
 
 
+Creating your own page
+======================
+This part of the tutorial will show you how to create your own page. Pages can be either static, or connected to your database.
+
+The first thing you have to do is go to the file:
+
+    RED/site/src/CCMycontroller/CCMycontroller.php
     
+In this file each page is represented by a public function. Let as look at an example:
+
+    /**
+    * The page about me
+    */
+    public function Aboutme() 
+    {
+        $content = new CMContent(1);
+        if($this->config['require_permissions'] == true)
+        {
+            $this->user->CheckGroupPageRights();
+        }
+        $this->views->SetTitle('About Me');
+                $this->views->AddInclude(__DIR__ . '/page.tpl.php', array(
+                  'content' => $content,
+                ));
+    }
+    
+This code represents an aboutme page.
+
+To create your own page, simply copy and paste this function and change the following things:
+
+1. The comment describing the function. Change this to describe your own page.
+2. The name of the function. Change the line "public function Aboutme()" to "public function Yourpage()" 
+3. Change the "1" in the line "$content = new CMContent(1);" to the id of the content you wish to show on your page. You created the "page content" in the previous step of this tutorial. 
+4. Finally, change the line "$this->views->SetTitle('About Me');" to "$this->views->SetTitle('Your title');"
+
+This page makes use of a connection to the database. It is possible to create a page which does not make use of this connection. 
+To do this; follow the first two steps above. When you get to stage 3. simply remove the "1". Then follow the steps below:
+
+1. Change the line "$this->views->SetTitle('About Me');" to "$this->views->SetTitle('Your title');"
+2. Change:   
+
+    $this->views->AddInclude(__DIR__ . '/page.tpl.php', array(
+                  'content' => $content,
+                ));"
+                
+to: 
+
+    $this->views->AddInclude(__DIR__ . '/yourPage.tpl.php');
+    
+3. In the same folder as CCMycontroller, create a new file called "yourPage.tpl.php".
+4. Open "yourPage.tpl.php" and write your own HTML.
+
+You have now created your own page using RED. Now you would probably want to configure the navmenu to add your new page.
+Simply open the file:
+
+    RED/site/config.php
+    
+and scroll down to the following part:
+
+    'my-navbar' => array(
+    'home'      => array('label'=>'About Me', 'url'=>'my/aboutme'),
+    'blog'      => array('label'=>'My Blog', 'url'=>'my/blog'),
+    'guestbook' => array('label'=>'Guestbook', 'url'=>'my/guestbook'),
+    ),
+    
+Now finally, add your page, it should look like this:
+
+     'my-navbar' => array(
+    'home'      => array('label'=>'About Me', 'url'=>'my/aboutme'),
+    'blog'      => array('label'=>'My Blog', 'url'=>'my/blog'),
+    'guestbook' => array('label'=>'Guestbook', 'url'=>'my/guestbook'),
+    'yourpage' => array('label'=>'Your Page', 'url'=>'my/yourpage'),
+    ),   
+
+Create a blog
+=============
+RED handily comes with a blog which you can use. Content can be added as described previously in this tutorial and the default posts can be removed from the
+admin controll panel.
+    
+
