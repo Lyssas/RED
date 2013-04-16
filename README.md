@@ -284,16 +284,27 @@ To create your own page, simply copy and paste this function and change the foll
 This page makes use of a connection to the database. It is possible to create a page which does not make use of this connection. 
 To do this; follow the first two steps above. When you get to stage 3. simply remove the "1". Then follow the steps below:
 
-1. Change the line "$this->views->SetTitle('About Me');" to "$this->views->SetTitle('Your title');"
+1. Change the line:
+
+         $this->views->SetTitle('About Me'); 
+        
+to 
+
+         $this->views->SetTitle('Your title');
+
+
 2. Change:   
 
-    $this->views->AddInclude(__DIR__ . '/page.tpl.php', array(
+        $this->views->AddInclude(__DIR__ . '/page.tpl.php', array(
                   'content' => $content,
                 ));"
-                
+       
+       
 to: 
 
-    $this->views->AddInclude(__DIR__ . '/yourPage.tpl.php');
+
+        $this->views->AddInclude(__DIR__ . '/yourPage.tpl.php');
+        
     
 3. In the same folder as CCMycontroller, create a new file called "yourPage.tpl.php".
 4. Open "yourPage.tpl.php" and write your own HTML.
