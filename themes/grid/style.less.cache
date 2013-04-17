@@ -1,4 +1,4 @@
-a:4:{s:4:"root";s:10:"style.less";s:8:"compiled";s:8970:"html,
+a:4:{s:4:"root";s:10:"style.less";s:8:"compiled";s:9166:"html,
 body,
 div,
 span,
@@ -558,6 +558,16 @@ body {
   margin: 0 10px;
   color: #666;
 }
+div.comment {
+  background-color: #FFF;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 0px;
+  margin: 12px;
+  border: 1px solid;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 a {
   color: inherit;
 }
@@ -621,4 +631,4 @@ a:focus {
 .silent {
   color: #999;
 }
-";s:5:"files";a:2:{s:54:"C:\wamp\www\phpmvc\kmoment7\RED\themes\grid\style.less";i:1365426720;s:82:"C:\wamp\www\phpmvc\kmoment7\RED\themes\grid\semantic.gs\stylesheets\less\grid.less";i:1331866480;}s:7:"updated";i:1365426723;}
+";s:5:"files";a:2:{s:53:"C:\wamp\www\phpmvc\projekt\RED\themes\grid\style.less";i:1366108903;s:81:"C:\wamp\www\phpmvc\projekt\RED\themes\grid\semantic.gs\stylesheets\less\grid.less";i:1331866480;}s:7:"updated";i:1366108904;}

@@ -61,13 +61,11 @@ $this->config['controllers'] = array(
 * Settings for the theme.
 */
 $this->config['theme'] = array(
-  // The name of the theme in the theme directory
-  //'name'    => 'core', 
   'path'            => 'site/themes/mytheme',
   'parent'          => 'themes/grid',
   'stylesheet'      => 'style.css',
-  //'stylesheet' => 'style.php',
   'template_file'   => 'index.tpl.php',
+  
   // A list of valid theme regions
   'regions' => array('flash','featured-first','featured-middle','featured-last',
     'primary','sidebar','triptych-first','triptych-middle','triptych-last',
@@ -77,6 +75,7 @@ $this->config['theme'] = array(
   'menu_to_region' => array('my-navbar'=>'navbar'),
   
   'data' => array(
+  	  
     'header' => 'RED',
     'slogan' => 'A PHP-based MVC-inspired CMF',
     'favicon' => 'favicon.png',
@@ -107,11 +106,11 @@ $this->config['url_type'] = 1;
 * 1 = display
 * 0 = hide
 */
-$this->config['debug']['RED'] = 1;
-$this->config['debug']['db-num-queries'] = 1;
-$this->config['debug']['db-queries'] = 1;
-$this->config['debug']['session'] = 1;
-$this->config['debug']['timer'] = 1;
+$this->config['debug']['RED'] = 0;
+$this->config['debug']['db-num-queries'] = 0;
+$this->config['debug']['db-queries'] = 0;
+$this->config['debug']['session'] = 0;
+$this->config['debug']['timer'] = 0;
 
 /**
 * Set database(s).
@@ -131,6 +130,16 @@ $this->config['hashing_algorithm'] = 'sha1salt';
 * Allow or disallow creation of new user accounts.
 */
 $this->config['create_new_users'] = true;
+
+/**
+* Allow or disallow everyone (logged in or not) disregarding of group memberships
+* to view all types of content (posts and pages).
+*
+* true = requires log in and group membership with proper permissions.
+* false = anyone can see all types of content.
+*/
+$this->config['require_permissions'] = false;
+
 
 /**
 * Define a routing table for urls.
@@ -155,7 +164,7 @@ $this->config['menus'] = array(
     'blog'      => array('label'=>'Blog', 'url'=>'blog'),
   ),
   'my-navbar' => array(
-    'home'      => array('label'=>'About Me', 'url'=>'my'),
+    'home'      => array('label'=>'About Me', 'url'=>'my/aboutme'),
     'blog'      => array('label'=>'My Blog', 'url'=>'my/blog'),
     'guestbook' => array('label'=>'Guestbook', 'url'=>'my/guestbook'),
   ),

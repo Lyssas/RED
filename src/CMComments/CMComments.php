@@ -45,19 +45,14 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
     $order_by     = isset($args['order-by'])    ? $args['order-by'] : 'id'; 
    
     $queries = array(
-      'drop table comments'     => "DROP TABLE IF EXISTS Comments;",
-      'create table comments'   => "CREATE TABLE IF NOT EXISTS Comments (id INTEGER PRIMARY KEY, author TEXT, content TEXT, postId INT, created DATETIME default (datetime('now')));",
       'drop table content'      => "DROP TABLE IF EXISTS Content;",
       'delete content'      	=> "DELETE FROM Content WHERE id=?;",
       'create table content'    => "CREATE TABLE IF NOT EXISTS Content (id INTEGER PRIMARY KEY, key TEXT KEY, type TEXT, title TEXT, data TEXT, filter TEXT, idUser TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL, deleted DATETIME default NULL, FOREIGN KEY(idUser) REFERENCES User(id));",
       'insert content'          => 'INSERT INTO Content (key,type,title,data, filter, idUser) VALUES (?,?,?,?,?,?);',
-      'insert into comments'    => 'INSERT INTO Comments (author,content,postId) VALUES (?,?,?);',
       'update content'          => "UPDATE Content SET key=?, type=?, title=?, data=?, filter=?, updated=datetime('now') WHERE id=?;",
       'select * single'         => "SELECT * FROM Content WHERE id=? ORDER BY $order_by $order_order",
       'select * type'         	=> "SELECT * FROM Content WHERE type=? ORDER BY $order_by $order_order",
       'select all'              => 'SELECT * FROM Content',
-      'select comments'         => "SELECT * FROM Comments WHERE postId=? ORDER BY $order_by $order_order",
-      'select all comments'         => "SELECT * FROM Comments ORDER BY $order_by $order_order",
       
      );
     if(!isset($queries[$key])) {
@@ -76,9 +71,7 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
         try {
             $this->db->ExecuteQuery(self::SQL('drop table content'));
       $this->db->ExecuteQuery(self::SQL('create table content'));
-      $this->db->ExecuteQuery(self::SQL('drop table comments'));
-      $this->db->ExecuteQuery(self::SQL('create table comments'));
-      $this->db->ExecuteQuery(self::SQL('insert content'), array('about-me', 'page', 'About me', 'This is a demo page where information about the user can be presented.', 'plain', 'Automatically generated'));
+      $this->db->ExecuteQuery(self::SQL('insert content'), array('about-me', 'page', 'About me', 'This is a demo post where information about the user can be presented.', 'plain', 'Automatically generated'));
       $this->db->ExecuteQuery(self::SQL('insert content'), array('home', 'page', 'Home', 'This is a demo page, this is the first page on your own site built with the framework. It will be visible to all visitors.', 'plain', 'Automatically generated'));
       $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world2', 'post', 'Hello World Again', 'This is a another demo post.', 'plain', 'Automatically generated'));
       $this->db->ExecuteQuery(self::SQL('insert content'), array('hello-world3', 'post', 'Bla Bla Hello World Yet Again', 'This is yet another demo post.', 'plain', 'Automatically generated'));
@@ -87,7 +80,6 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
       $this->db->ExecuteQuery(self::SQL('insert content'), array('home', 'page', 'Home page', 'This is a demo page, this could be your personal home-page.', 'plain', 'Automatically generated'));
       $this->db->ExecuteQuery(self::SQL('insert content'), array('about', 'page', 'About page', 'This is a demo page, this could be your personal home-page.', 'plain', 'Automatically generated'));
       $this->db->ExecuteQuery(self::SQL('insert content'), array('download', 'page', 'Download page', 'This is a demo page, this could be your personal home-page.', 'plain', 'Automatically generated'));
-      $this->db->ExecuteQuery(self::SQL('insert into comments'), array('Automatic Author', 'This is a demo comment', '3'));
           return array('success', 'Successfully created the database tables and created a default "Hello World" blog post, owned by you.');
         } catch(Exception$e) {
           die("$e<br/>Failed to open database: " . $this->config['database'][0]['dsn']);
@@ -222,46 +214,6 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
     }
   }
   
-   /**
-   * List comments of a singel post.
-   *
-   * @returns array with listing or null if empty.
-   */
-  
- public function ListComments($postId=null, $args=null) {    
-    try 
-    {
-      
-        return $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('select comments', $args), array($postId));
-      
-    } 
-    catch(Exception $e) 
-    {
-      echo $e;
-      return null;
-    }
-  }
-  
-  /**
-   * List all comments.
-   *
-   * @returns array with listing or null if empty.
-   */
-  public function ListAllComments($postId=null, $args=null) {    
-    try 
-    {
-      
-        return $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('select all comments', $args));
-      
-    } 
-    catch(Exception $e) 
-    {
-      echo $e;
-      return null;
-    }
-  }
-  
-  
   /**
    * Filter content according to a filter.
    *
@@ -294,19 +246,5 @@ class CMContent extends CObject implements IHasSQL, ArrayAccess {
     return $this->Filter($this['data'], $this['filter']);
   }
   
-  /**
-   * Inserts the comment into the database
-   */
-  public function CreateComments($author, $content, $postId) 
-  {
-  
-    $this->db->ExecuteQuery(self::SQL('insert into comments'), array($author, $content, $postId));
-    if($this->db->RowCount() == 0) {
-      $this->session->AddMessage('error', "Failed to create comment.");
-      return false;
-    }
-    
-    return true;
-  }
   
 }

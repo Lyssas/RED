@@ -14,19 +14,39 @@ class CCMycontroller extends CObject implements IController {
    * The page about me
    */
   public function Index() {
-    $content = new CMContent(1);
-    $this->views->SetTitle('About me'.htmlEnt($content['title']));
+    $content = new CMContent(2);
+    
+    $this->views->SetTitle('Home '.htmlEnt($content['title']));
                $this->views->AddInclude(__DIR__ . '/page.tpl.php', array(
                   'content' => $content,
                 ));
   }
-
+  
+  /**
+   * The page about me
+   */
+  public function Aboutme() {
+    $content = new CMContent(1);
+    if($this->config['require_permissions'] == true)
+    {
+    	    $this->user->CheckGroupPageRights();
+    }
+    $this->views->SetTitle('About Me');
+               $this->views->AddInclude(__DIR__ . '/page.tpl.php', array(
+                  'content' => $content,
+                ));
+  }
+  
 
   /**
    * The blog.
    */
   public function Blog() {
     $content = new CMContent();
+    if($this->config['require_permissions'] == true)
+    {
+    	    $this->user->CheckGroupPostRights();
+    }
     $this->views->SetTitle('My blog');
                 $this->views->AddInclude(__DIR__ . '/blog.tpl.php', array(
                   'contents' => $content->ListAll(array('type'=>'post', 'order-by'=>'title', 'order-order'=>'DESC')),

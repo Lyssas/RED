@@ -34,21 +34,28 @@ class CMUser extends CObject implements IModule, IHasSQL, ArrayAccess {
    *
    * @param string $key the string that is the key of the wanted SQL-entry in the array.
    */
-  public static function SQL($key=null) {
+  public static function SQL($key=null, $args=null) {
+  	  
+    $order_order  = isset($args['order-order']) ? $args['order-order'] : 'DESC';
+    $order_by     = isset($args['order-by'])    ? $args['order-by'] : 'id'; 
+   
     $queries = array(
       'drop table user'         => "DROP TABLE IF EXISTS User;",
       'drop table group'        => "DROP TABLE IF EXISTS Groups;",
       'drop table user2group'   => "DROP TABLE IF EXISTS User2Groups;",
       'create table user'       => "CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, email TEXT, algorithm TEXT, salt TEXT, password TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL);",
-      'create table group'      => "CREATE TABLE IF NOT EXISTS Groups (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL);",
+      'create table group'      => "CREATE TABLE IF NOT EXISTS Groups (id INTEGER PRIMARY KEY, acronym TEXT KEY, name TEXT, created DATETIME default (datetime('now')), updated DATETIME default NULL, postRights INT, pageRights INT);",
       'create table user2group' => "CREATE TABLE IF NOT EXISTS User2Groups (idUser INTEGER, idGroups INTEGER, created DATETIME default (datetime('now')), PRIMARY KEY(idUser, idGroups));",
       'insert into user'        => 'INSERT INTO User (acronym,name,email,algorithm,salt,password) VALUES (?,?,?,?,?,?);',
-      'insert into group'       => 'INSERT INTO Groups (acronym,name) VALUES (?,?);',
+      'insert into group'       => 'INSERT INTO Groups (acronym,name, postRights, pageRights) VALUES (?,?,1,1);',
       'insert into user2group'  => 'INSERT INTO User2Groups (idUser,idGroups) VALUES (?,?);',
       'check user password'     => 'SELECT * FROM User WHERE (acronym=? OR email=?);',
       'get group memberships'   => 'SELECT * FROM Groups AS g INNER JOIN User2Groups AS ug ON g.id=ug.idGroups WHERE ug.idUser=?;',
       'update profile'          => "UPDATE User SET name=?, email=?, updated=datetime('now') WHERE id=?;",
       'update password'         => "UPDATE User SET algorithm=?, salt=?, password=?, updated=datetime('now') WHERE id=?;",
+      'select all users'        => 'SELECT * FROM User',
+      'select all groups'       => 'SELECT * FROM Groups',
+      'select all memberships'  => 'SELECT * FROM User2Groups',
      );
     if(!isset($queries[$key])) {
       throw new Exception("No such SQL query, key '$key' was not found.");
@@ -259,6 +266,7 @@ class CMUser extends CObject implements IModule, IHasSQL, ArrayAccess {
    */
   public function Create($acronym, $password, $name, $email) {
     $pwd = $this->CreatePassword($password);
+    
     $this->db->ExecuteQuery(self::SQL('insert into user'), array($acronym, $name, $email, $pwd['algorithm'], $pwd['salt'], $pwd['password']));
     if($this->db->RowCount() == 0) {
       $this->session->AddMessage('error', "Failed to create user.");
@@ -307,5 +315,154 @@ class CMUser extends CObject implements IModule, IHasSQL, ArrayAccess {
       break;
     }
   }
+  
+   /**
+   * List all users
+   *
+   * @returns array with listing or null if empty.
+   */
+  
+ public function ListAllUsers($args=null) 
+ {    
+    try 
+    {
+           return $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('select all users', $args));
+    }
+    catch(Exception $e) 
+    {
+      echo $e;
+      return null;
+    }
+ }
+ 
+ public function ListAllGroups($args=null) 
+ {    
+    try 
+    {
+           return $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('select all groups', $args));
+    }
+    catch(Exception $e) 
+    {
+      echo $e;
+      return null;
+    }
+ }
+ 
+ public function ListAllMemberships($args=null) 
+ {    
+    try 
+    {
+           return $this->db->ExecuteSelectQueryAndFetchAll(self::SQL('select all memberships', $args));
+    }
+    catch(Exception $e) 
+    {
+      echo $e;
+      return null;
+    }
+ }
+ 
+ 
+ public function CheckGroupPostRights($controller=null) 
+ {
+ 	 $check = 0;
+ 	 
+ 	 $profile = $this->GetUserProfile();
+ 	 
+ 	 if(isset($profile))
+ 	 {
+		 foreach($profile['groups'] as $group)
+		 {
+			if($group['postRights'] == 1)
+			{
+				$check = 1;
+			}
+		 }
+		 
+		 if($check == 1)
+		 {
+			 return TRUE;	 
+		 }
+		 
+		 else
+		 {
+		 	 if(isset($controller))
+		 	 {
+		 	 $this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+			 $this->redirectTo($controller);		 
+		 	 }
+		 	 else
+		 	 {
+			 $this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+			 $this->redirectToController();	
+			 }
+		 }
+	 }
+	 else
+	 {
+	 	 if(isset($controller))
+		 {
+		 	 $this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+			 $this->redirectTo($controller);		 
+		 }
+		 else
+		 {
+		 	$this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+		 	$this->redirectToController(); 
+		 }
+	 }
+ 	 
+ }
+ 
+ public function CheckGroupPageRights($controller=null) 
+ {
+ 	 $check = 0;
+ 	 
+ 	 $profile = $this->GetUserProfile();
+ 	 
+ 	 if(isset($profile))
+ 	 {
+		 foreach($profile['groups'] as $group)
+		 {
+			if($group['pageRights'] == 1)
+			{
+				$check = 1;
+			}
+		 }
+		 
+		 if($check == 1)
+		 {
+			 return TRUE;	 
+		 }
+		 
+		 else
+		 {
+		 	 if(isset($controller))
+		 	 {
+		 	 $this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+			 $this->redirectTo($controller);		 
+		 	 }
+		 	 else
+		 	 {
+			 $this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+			 $this->redirectToController();	
+			 }
+		 }
+	 }
+	 else
+	 {
+	 	 if(isset($controller))
+		 {
+		 	 $this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+			 $this->redirectTo($controller);		 
+		 }
+		 else
+		 {
+		 	$this->session->AddMessage('error', "You do not have permissions to see the requested content. You are either not logged in or lack the proper rights. Contact the site admin if you want to petition for the rights.");
+		 	$this->redirectToController(); 
+		 }
+	 }
+ 	 
+ }
+ 
   
 }

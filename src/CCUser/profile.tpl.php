@@ -1,4 +1,6 @@
-<div class = 'temp'>
+<?php $RED = CRed::Instance();?>
+<?php if( $RED->user->isAuthenticated()): ?>
+
 <h1>User Profile</h1>
 <p>You can view and update your profile information.</p>
 
@@ -12,6 +14,7 @@
     <li> <?php echo $group['name'] ?>
   <?php endforeach; ?>
   </ul>
-</div>
+<?php endif; ?>
+
 
 

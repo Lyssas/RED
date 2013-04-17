@@ -31,6 +31,12 @@ class CCContent extends CObject implements IController {
    * @param id integer the id of the content.
    */
   public function Edit($id=null) {
+    if($this->user->IsAdministrator()==false)
+    {
+    	    	$this->session->AddMessage('error', "You do not have permissions to edit content. Please log in as administrator.");
+		$this->redirectToController(); 	    
+    }
+  	  
     $content = new CMContent($id);
     $form = new CFormContent($content);
     
@@ -79,5 +85,24 @@ class CCContent extends CObject implements IController {
     $this->RedirectToController();
   }
   
+ 
+ /* 
+  public function DoCreateComment($form, $id) 
+  {    
+  	  die('hello C');
+  $content = new CMContent();
+     if($content->CreateComments($form['author']['value'], 
+                         	$form['content']['value']
+                         	)) 
+     {
+     	     $this->session->AddMessage('success', "The group was successfully created.");
+      
+     	     $this->RedirectTo('content', 'view', $id);
+    } else {
+      $this->session->AddMessage('notice', "Failed to create the group.");
+      $this->RedirectTo('content', 'view', $id);
+    }
+  }
+  */
 
 }

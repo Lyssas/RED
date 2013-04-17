@@ -558,6 +558,16 @@ body {
   margin: 0 10px;
   color: #666;
 }
+div.comment {
+  background-color: #FFF;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 0px;
+  margin: 12px;
+  border: 1px solid;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 a {
   color: inherit;
 }

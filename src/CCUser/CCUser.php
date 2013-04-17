@@ -14,7 +14,7 @@ class CCUser extends CObject implements IController {
    */
   public function __construct() {
     parent::__construct();
-  //  $this->userModel = new CMUser();
+  
   }
 
 
@@ -50,7 +50,7 @@ class CCUser extends CObject implements IController {
   public function Login() {
     $form = new CFormUserLogin($this);
     if($form->Check() === false) {
-      $this->AddMessage('notice', 'You must fill in acronym and password.');
+      $this->session->AddMessage('notice', 'You must fill in acronym and password.');
       $this->RedirectToController('login');
     }
     $this->views->SetTitle('Login');
@@ -61,26 +61,15 @@ class CCUser extends CObject implements IController {
                 ));
   }
   
-  /*
-  public function Login() {
-    $form = new CFormUserLogin($this);
-    $form->CheckIfSubmitted();
-    
-    $this->views->SetTitle('Login');
-    $this->views->AddInclude(__DIR__ . '/login.tpl.php', array('login_form'=>$form->GetHTML()));  
-                //problem här... ^
-  }
-  */
-  
   /**
    * Perform a login of the user as callback on a submitted form.
    */
   public function DoLogin($form) {
     if($this->user->Login($form['acronym']['value'], $form['password']['value'])) {
-     // $this->session->AddMessage('success', "Welcome HAIHAI {$this->user['name']}.");
+     
       $this->RedirectToController('profile');
     } else {
-     // $this->session->AddMessage('notice', "Failed to login, user does not exist or password does not match.");
+     
       $this->RedirectToController('login');      
     }
   }
@@ -132,13 +121,18 @@ class CCUser extends CObject implements IController {
    */
   public function Create() 
   {
+    $users = new CMUser();
     $form = new CFormUserCreate($this);
+    
     if($form->Check() === false) {
       $this->session->AddMessage('notice', 'You must fill in all values.');
       $this->RedirectToController('Create');
     }
     $this->views->SetTitle('Create user');
-                $this->views->AddInclude(__DIR__ . '/create.tpl.php', array('form' => $form->GetHTML()));     
+                $this->views->AddInclude(__DIR__ . '/create.tpl.php', array(
+                	'form' => $form->GetHTML(),
+                	'users' => $users->ListAllUsers(),
+                	));     
   }
   
     /**
