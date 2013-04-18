@@ -330,10 +330,18 @@ Now finally, add your page, it should look like this:
     'guestbook' => array('label'=>'Guestbook', 'url'=>'my/guestbook'),
     'yourpage' => array('label'=>'Your Page', 'url'=>'my/yourpage'),
     ),   
+    
+Your new page should now be available at:
+
+    /RED/my/yourpage
+    
+or by clicking the navigation button you just created.
 
 Create a blog
 =============
 RED handily comes with a blog which you can use. Content can be added as described previously in this tutorial and the default posts can be removed from the
-admin controll panel.
+admin controll panel. You can reach your blog by clicking the button 'My Blog' in the default navigation menu, or by pointing your browser to:
+
+    /RED/my/blog
     
 
